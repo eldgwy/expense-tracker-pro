@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { searchController } from "./search.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { globalSearchQuerySchema, searchSuggestionsSchema } from "./search.validation";
-import { authMiddleware } from "@/common/middleware/auth";
+import { searchController } from "./search.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { globalSearchQuerySchema, searchSuggestionsSchema } from "./search.validation.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 
 const router: Router = Router();
 

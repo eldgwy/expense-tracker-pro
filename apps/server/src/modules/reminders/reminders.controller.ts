@@ -1,8 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { reminderService } from "./reminders.service";
-import { sendSuccess, sendCreated, sendNoContent } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
-import type { ReminderQueryFilters } from "./reminders.types";
+import { reminderService } from "./reminders.service.js";
+import { sendSuccess, sendCreated, sendNoContent } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
+import type { ReminderQueryFilters } from "./reminders.types.js";
 
 export const reminderController = {
   async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {

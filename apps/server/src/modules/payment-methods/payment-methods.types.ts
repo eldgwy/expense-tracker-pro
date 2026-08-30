@@ -1,15 +1,18 @@
-import type { PaymentMethodType } from "@/generated/prisma/client";
+import type { PaymentMethodType } from "../../generated/prisma/client.js";
 
 export interface CreatePaymentMethodInput {
-  type: PaymentMethodType;
   name: string;
+  type: PaymentMethodType;
+  icon?: string;
+  color?: string;
   isDefault?: boolean;
-  lastFour?: string | null;
+  lastFour?: string;
 }
 
 export interface UpdatePaymentMethodInput {
-  type?: PaymentMethodType;
   name?: string;
+  icon?: string;
+  color?: string;
   isDefault?: boolean;
-  lastFour?: string | null;
+  lastFour?: string;
 }

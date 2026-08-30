@@ -1,14 +1,14 @@
 import { Router } from "express";
-import { userController } from "./users.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { authMiddleware } from "@/common/middleware/auth";
+import { userController } from "./users.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 import {
   updateProfileSchema,
   updatePasswordSchema,
   deactivateAccountSchema,
   deleteAccountSchema,
-} from "./users.validation";
-import { uploadAvatarMiddleware } from "@/common/utils/upload";
+} from "./users.validation.js";
+import { uploadAvatarMiddleware } from "../../common/utils/upload.js";
 
 const router: Router = Router();
 

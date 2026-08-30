@@ -1,9 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { notificationService } from "./notifications.service";
-import { monthlySummaryService } from "./monthly-summary.service";
-import { sendSuccess, sendNoContent } from "@/common/responses";
-import { buildPaginationMeta } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
+import { notificationService } from "./notifications.service.js";
+import { monthlySummaryService } from "./monthly-summary.service.js";
+import { sendSuccess, sendNoContent, buildPaginationMeta } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
 
 /** Parse a YYYY-MM string into { year, month }. Returns null if malformed. */
 function parseMonth(monthStr?: string): { year: number; month: number } {

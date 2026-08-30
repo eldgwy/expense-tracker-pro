@@ -1,5 +1,5 @@
-import { categoryRepository } from "./categories.repository";
-import { NotFoundError, ConflictError, ValidationError } from "@/common/errors";
+import { categoryRepository } from "./categories.repository.js";
+import { NotFoundError, ConflictError, ValidationError } from "../../common/errors/index.js";
 
 export const categoryService = {
   async findAll(userId: string, query?: string) {

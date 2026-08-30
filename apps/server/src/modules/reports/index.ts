@@ -1,8 +1,8 @@
-export { reportController } from "./reports.controller";
-export { reportService } from "./reports.service";
-export { reportRepository } from "./reports.repository";
-export { reportRoutes } from "./reports.routes";
-export { reportMapper } from "./reports.mapper";
-export * from "./reports.types";
-export * from "./reports.validation";
-export * from "./reports.constants";
+export { reportController } from "./reports.controller.js";
+export { reportService } from "./reports.service.js";
+export { reportRepository } from "./reports.repository.js";
+export { reportRoutes } from "./reports.routes.js";
+export { reportMapper } from "./reports.mapper.js";
+export * from "./reports.types.js";
+export * from "./reports.validation.js";
+export * from "./reports.constants.js";

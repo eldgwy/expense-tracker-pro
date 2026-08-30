@@ -1,6 +1,6 @@
-import { savingsGoalRepository } from "./savings-goals.repository";
-import { NotFoundError, ValidationError } from "@/common/errors";
-import type { SavingsGoalQueryFilters } from "./savings-goals.types";
+import { savingsGoalRepository } from "./savings-goals.repository.js";
+import { NotFoundError, ValidationError } from "../../common/errors/index.js";
+import type { SavingsGoalQueryFilters } from "./savings-goals.types.js";
 
 export const savingsGoalService = {
   async findAll(userId: string, filters: SavingsGoalQueryFilters = {}) {

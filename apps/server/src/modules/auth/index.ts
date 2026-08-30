@@ -1,6 +1,6 @@
-export { authController } from "./auth.controller";
-export { authService } from "./auth.service";
-export { authRepository } from "./auth.repository";
-export { authRoutes } from "./auth.routes";
-export * from "./auth.types";
-export * from "./auth.validation";
+export { authController } from "./auth.controller.js";
+export { authService } from "./auth.service.js";
+export { authRepository } from "./auth.repository.js";
+export { authRoutes } from "./auth.routes.js";
+export * from "./auth.types.js";
+export * from "./auth.validation.js";

@@ -1,6 +1,6 @@
-import { paymentMethodRepository } from "./payment-methods.repository";
-import type { PaymentMethodStats } from "./payment-methods.repository";
-import { NotFoundError, ConflictError, ValidationError } from "@/common/errors";
+import { paymentMethodRepository } from "./payment-methods.repository.js";
+import type { PaymentMethodStats } from "./payment-methods.repository.js";
+import { NotFoundError, ConflictError, ValidationError } from "../../common/errors/index.js";
 
 export type { PaymentMethodStats };
 

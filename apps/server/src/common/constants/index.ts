@@ -1,4 +1,4 @@
-import { Currency } from "@/generated/prisma/client";
+import { Currency } from "../../generated/prisma/client.js";
 
 // ─── API ──────────────────────────────────────────────────────
 

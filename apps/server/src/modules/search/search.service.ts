@@ -1,4 +1,4 @@
-import { searchRepository, suggestionsRepository } from "./search.repository";
+import { searchRepository, suggestionsRepository } from "./search.repository.js";
 import type {
   GlobalSearchQuery,
   GlobalSearchResult,
@@ -7,7 +7,7 @@ import type {
   SortOrder,
   SuggestionsResult,
   SuggestionGroup,
-} from "./search.types";
+} from "./search.types.js";
 
 /**
  * Compute a Date range from a DatePreset.

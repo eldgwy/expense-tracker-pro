@@ -1,7 +1,7 @@
 import type { Response, NextFunction } from "express";
-import { reportService } from "./reports.service";
-import { sendSuccess } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
+import { reportService } from "./reports.service.js";
+import { sendSuccess } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
 
 export const reportController = {
   async getCategorySummary(req: AuthenticatedRequest, res: Response, next: NextFunction) {

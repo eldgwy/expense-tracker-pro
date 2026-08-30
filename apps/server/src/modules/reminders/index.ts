@@ -1,6 +1,6 @@
-export { reminderController } from "./reminders.controller";
-export { reminderService, computeNextTriggerDate } from "./reminders.service";
-export { reminderRepository } from "./reminders.repository";
-export { reminderRoutes } from "./reminders.routes";
-export * from "./reminders.types";
-export * from "./reminders.validation";
+export { reminderController } from "./reminders.controller.js";
+export { reminderService, computeNextTriggerDate } from "./reminders.service.js";
+export { reminderRepository } from "./reminders.repository.js";
+export { reminderRoutes } from "./reminders.routes.js";
+export * from "./reminders.types.js";
+export * from "./reminders.validation.js";

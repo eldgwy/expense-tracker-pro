@@ -1,2 +1,2 @@
-export { prisma } from "./prisma";
-export { default as prismaClient } from "./prisma";
+export { prisma } from "./prisma.js";
+export { default as prismaClient } from "./prisma.js";

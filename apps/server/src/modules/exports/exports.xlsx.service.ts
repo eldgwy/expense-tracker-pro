@@ -1,13 +1,13 @@
 import ExcelJS from "exceljs";
-import { reportService } from "../reports/reports.service";
-import { reportRepository } from "../reports/reports.repository";
-import { budgetRepository } from "../budgets/budgets.repository";
-import { savingsGoalRepository } from "../savings-goals/savings-goals.repository";
+import { reportService } from "../reports/reports.service.js";
+import { reportRepository } from "../reports/reports.repository.js";
+import { budgetRepository } from "../budgets/budgets.repository.js";
+import { savingsGoalRepository } from "../savings-goals/savings-goals.repository.js";
 import type {
   ColumnName,
   ExportTransactionsQuery,
   ExportTransactionsXlsxResult,
-} from "./exports.types";
+} from "./exports.types.js";
 
 // ─── Style Constants ──────────────────────────────────────────
 

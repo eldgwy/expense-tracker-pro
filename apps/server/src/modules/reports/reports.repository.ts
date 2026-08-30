@@ -1,4 +1,4 @@
-import { prisma } from "@/db/prisma";
+import { prisma } from "../../db/prisma.js";
 
 export const reportRepository = {
   async findTransactionsInRange(userId: string, startDate: Date, endDate: Date) {

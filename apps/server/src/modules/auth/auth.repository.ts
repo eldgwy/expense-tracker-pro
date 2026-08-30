@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { prisma } from "@/db/prisma";
+import { prisma } from "../../db/prisma.js";
 
 export const authRepository = {
   async findByEmail(email: string) {

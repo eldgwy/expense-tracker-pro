@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { nameSchema, hexColorSchema } from "@/common/validators";
+import { nameSchema, hexColorSchema } from "../../common/validators/index.js";
 
 const goalPrioritySchema = z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]);
 

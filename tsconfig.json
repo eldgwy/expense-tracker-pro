@@ -1,15 +1,13 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "rootDir": ".",
     "paths": {
-      "@/*": ["./apps/server/src/*"],
       "@expense-tracker/types": ["./packages/types/src"],
       "@expense-tracker/constants": ["./packages/constants/src"],
       "@expense-tracker/utils": ["./packages/utils/src"],
       "@expense-tracker/validation": ["./packages/validation/src"]
     }
   },
-  "include": ["api/**/*", "apps/**/*", "packages/**/*"]
+  "include": ["apps/**/*", "packages/**/*"]
 }

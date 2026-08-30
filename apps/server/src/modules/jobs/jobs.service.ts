@@ -1,10 +1,10 @@
-import { prisma } from "@/db/prisma";
-import { budgetService } from "@/modules/budgets/budgets.service";
-import { reminderService } from "@/modules/reminders/reminders.service";
-import { monthlySummaryService } from "@/modules/notifications/monthly-summary.service";
-import { notificationRepository } from "@/modules/notifications/notifications.repository";
-import { logger } from "@/config/logger";
-import type { JobName, JobRunSummary } from "./jobs.types";
+import { prisma } from "../../db/prisma.js";
+import { budgetService } from "../budgets/budgets.service.js";
+import { reminderService } from "../reminders/reminders.service.js";
+import { monthlySummaryService } from "../notifications/monthly-summary.service.js";
+import { notificationRepository } from "../notifications/notifications.repository.js";
+import { logger } from "../../config/logger.js";
+import type { JobName, JobRunSummary } from "./jobs.types.js";
 
 /**
  * Maximum number of users processed concurrently by a fan-out job.

@@ -413,7 +413,7 @@ async function runTests() {
 
 async function main() {
   // Dynamic imports AFTER env overrides are set (see note at top of file).
-  const { createApp } = await import("../../app");
+  const { createApp } = await import("../../app.js");
   const { stopJobsScheduler } = await import("./jobs.scheduler");
   app = createApp();
   server = app.listen(4012, async () => {

@@ -23,7 +23,7 @@ process.env.JWT_SECRET = "test-secret-for-search-integration-tests";
 process.env.JWT_EXPIRES_IN = "1h";
 process.env.JWT_REFRESH_EXPIRES_IN = "7d";
 
-import { createApp } from "../../app";
+import { createApp } from "../../app.js";
 import type { Application } from "express";
 import type { Server } from "node:http";
 

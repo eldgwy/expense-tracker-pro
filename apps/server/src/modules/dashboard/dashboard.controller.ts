@@ -1,8 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { dashboardService } from "./dashboard.service";
-import { sendSuccess } from "@/common/responses";
-import { computeDateRange } from "@/common/utils";
-import type { AuthenticatedRequest, DateRangePreset } from "@/common/types";
+import { dashboardService } from "./dashboard.service.js";
+import { sendSuccess } from "../../common/responses/index.js";
+import { computeDateRange } from "../../common/utils/index.js";
+import type { AuthenticatedRequest, DateRangePreset } from "../../common/types/index.js";
 
 /**
  * Parse date range filter from query params into startDate/endDate Date objects.

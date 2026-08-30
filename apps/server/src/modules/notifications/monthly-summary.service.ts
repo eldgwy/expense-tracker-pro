@@ -1,6 +1,6 @@
-import { prisma } from "@/db/prisma";
-import { reportService } from "../reports/reports.service";
-import { notificationRepository } from "./notifications.repository";
+import { prisma } from "../../db/prisma.js";
+import { reportService } from "../reports/reports.service.js";
+import { notificationRepository } from "./notifications.repository.js";
 
 const MONTH_NAMES = [
   "January",

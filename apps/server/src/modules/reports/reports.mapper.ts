@@ -1,5 +1,5 @@
-import { MONTH_NAMES } from "./reports.constants";
-import type { CategorySummaryItem } from "./reports.types";
+import { MONTH_NAMES } from "./reports.constants.js";
+import type { CategorySummaryItem } from "./reports.types.js";
 
 interface TransactionWithCategory {
   id: string;

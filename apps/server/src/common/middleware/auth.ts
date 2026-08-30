@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { env } from "@/config/env";
-import { UnauthorizedError } from "@/common/errors";
-import type { AuthenticatedRequest, JwtPayload } from "@/common/types";
+import { env } from "../../config/env.js";
+import { UnauthorizedError } from "../errors/index.js";
+import type { AuthenticatedRequest, JwtPayload } from "../types/index.js";
 
 /**
  * Middleware that verifies the JWT access token from the Authorization header.

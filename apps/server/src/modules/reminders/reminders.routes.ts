@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { reminderController } from "./reminders.controller";
-import { validate, asyncHandler } from "@/common/middleware";
+import { reminderController } from "./reminders.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
 import {
   createReminderSchema,
   updateReminderSchema,
   reminderQuerySchema,
-} from "./reminders.validation";
-import { uuidParamSchema } from "@/common/validators";
-import { authMiddleware } from "@/common/middleware/auth";
+} from "./reminders.validation.js";
+import { uuidParamSchema } from "../../common/validators/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 
 const router: Router = Router();
 

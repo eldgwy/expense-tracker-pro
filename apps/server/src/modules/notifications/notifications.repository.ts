@@ -1,6 +1,6 @@
-import { prisma } from "@/db/prisma";
-import type { NotificationPreferences, NotificationPreferencesInput } from "./notifications.types";
-import { DEFAULT_NOTIFICATION_PREFERENCES } from "./notifications.types";
+import { prisma } from "../../db/prisma.js";
+import type { NotificationPreferences, NotificationPreferencesInput } from "./notifications.types.js";
+import { DEFAULT_NOTIFICATION_PREFERENCES } from "./notifications.types.js";
 
 export const notificationRepository = {
   /**

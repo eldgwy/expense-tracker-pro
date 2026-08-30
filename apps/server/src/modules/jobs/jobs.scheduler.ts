@@ -1,6 +1,6 @@
-import { jobsService } from "./jobs.service";
-import { logger } from "@/config/logger";
-import type { JobName, JobRunSummary } from "./jobs.types";
+import { jobsService } from "./jobs.service.js";
+import { logger } from "../../config/logger.js";
+import type { JobName, JobRunSummary } from "./jobs.types.js";
 
 interface ScheduledJob {
   name: JobName;

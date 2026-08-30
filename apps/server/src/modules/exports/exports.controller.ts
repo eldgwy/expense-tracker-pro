@@ -1,8 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { exportService } from "./exports.service";
-import { pdfExportService } from "./exports.pdf.service";
-import { xlsxExportService } from "./exports.xlsx.service";
-import type { AuthenticatedRequest } from "@/common/types";
+import { exportService } from "./exports.service.js";
+import { pdfExportService } from "./exports.pdf.service.js";
+import { xlsxExportService } from "./exports.xlsx.service.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
 
 /**
  * Determine the export format from the query string.

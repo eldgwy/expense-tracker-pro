@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
-import { userRepository } from "./users.repository";
-import { NotFoundError, UnauthorizedError, ConflictError } from "@/common/errors";
-import { Prisma } from "@/generated/prisma/client";
-import { deleteAvatarFile } from "@/common/utils/upload";
+import { userRepository } from "./users.repository.js";
+import { NotFoundError, UnauthorizedError, ConflictError } from "../../common/errors/index.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import { deleteAvatarFile } from "../../common/utils/upload.js";
 
 export const userService = {
   async getProfile(userId: string) {

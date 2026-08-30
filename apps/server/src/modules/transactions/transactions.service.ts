@@ -1,9 +1,9 @@
-import { transactionRepository } from "./transactions.repository";
-import { categoryRepository } from "@/modules/categories/categories.repository";
-import { paymentMethodRepository } from "@/modules/payment-methods/payment-methods.repository";
-import { NotFoundError, ValidationError } from "@/common/errors";
-import { paginate } from "@/common/utils";
-import { deleteReceiptFile } from "@/common/utils/upload";
+import { transactionRepository } from "./transactions.repository.js";
+import { categoryRepository } from "../categories/categories.repository.js";
+import { paymentMethodRepository } from "../payment-methods/payment-methods.repository.js";
+import { NotFoundError, ValidationError } from "../../common/errors/index.js";
+import { paginate } from "../../common/utils/index.js";
+import { deleteReceiptFile } from "../../common/utils/upload.js";
 
 export const transactionService = {
   async findAll(

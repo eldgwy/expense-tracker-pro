@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { paymentMethodController } from "./payment-methods.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { createPaymentMethodSchema, updatePaymentMethodSchema } from "./payment-methods.validation";
-import { uuidParamSchema } from "@/common/validators";
-import { authMiddleware } from "@/common/middleware/auth";
+import { paymentMethodController } from "./payment-methods.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { createPaymentMethodSchema, updatePaymentMethodSchema } from "./payment-methods.validation.js";
+import { uuidParamSchema } from "../../common/validators/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 
 const router: Router = Router();
 

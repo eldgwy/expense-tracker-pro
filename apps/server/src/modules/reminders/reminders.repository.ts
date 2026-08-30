@@ -1,5 +1,5 @@
-import { prisma } from "@/db/prisma";
-import type { ReminderType, ReminderFrequency } from "@/generated/prisma/client";
+import { prisma } from "../../db/prisma.js";
+import type { ReminderType, ReminderFrequency } from "../../generated/prisma/client.js";
 
 export interface ReminderFilters {
   type?: ReminderType;

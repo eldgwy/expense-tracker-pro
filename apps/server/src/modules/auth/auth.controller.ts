@@ -1,8 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
-import { authService } from "./auth.service";
-import { sendSuccess, sendCreated, sendMessage } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
-import { env } from "@/config/env";
+import { authService } from "./auth.service.js";
+import { sendSuccess, sendCreated, sendMessage } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
+import { env } from "../../config/env.js";
 
 // Helper to exclude sensitive fields only (password hash, reset tokens)
 // notificationPreferences is a user preference and should be included.

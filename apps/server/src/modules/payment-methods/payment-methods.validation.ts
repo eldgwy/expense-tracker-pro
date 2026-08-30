@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { nameSchema, hexColorSchema } from "@/common/validators";
-import { PAYMENT_METHOD_ICONS, PAYMENT_METHOD_COLORS } from "@/common/constants";
+import { nameSchema, hexColorSchema } from "../../common/validators/index.js";
+import { PAYMENT_METHOD_ICONS, PAYMENT_METHOD_COLORS } from "../../common/constants/index.js";
 
 const iconSchema = z
   .string()

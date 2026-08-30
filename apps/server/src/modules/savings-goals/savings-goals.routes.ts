@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { savingsGoalController } from "./savings-goals.controller";
-import { validate, asyncHandler } from "@/common/middleware";
+import { savingsGoalController } from "./savings-goals.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
 import {
   createSavingsGoalSchema,
   updateSavingsGoalSchema,
   savingsGoalQuerySchema,
   addProgressSchema,
   withdrawProgressSchema,
-} from "./savings-goals.validation";
-import { uuidParamSchema } from "@/common/validators";
-import { authMiddleware } from "@/common/middleware/auth";
+} from "./savings-goals.validation.js";
+import { uuidParamSchema } from "../../common/validators/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 
 const router: Router = Router();
 

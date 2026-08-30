@@ -1,16 +1,16 @@
 import { Router } from "express";
-import { transactionController } from "./transactions.controller";
-import { validate, asyncHandler } from "@/common/middleware";
+import { transactionController } from "./transactions.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
 import {
   createTransactionSchema,
   updateTransactionSchema,
   transactionQuerySchema,
   bulkDeleteSchema,
   bulkUpdateSchema,
-} from "./transactions.validation";
-import { uuidParamSchema } from "@/common/validators";
-import { authMiddleware } from "@/common/middleware/auth";
-import { uploadReceiptMiddleware } from "@/common/utils/upload";
+} from "./transactions.validation.js";
+import { uuidParamSchema } from "../../common/validators/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
+import { uploadReceiptMiddleware } from "../../common/utils/upload.js";
 
 const router: Router = Router();
 

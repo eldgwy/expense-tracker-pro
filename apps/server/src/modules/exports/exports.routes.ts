@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { exportController } from "./exports.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { exportTransactionsQuerySchema, exportReportQuerySchema } from "./exports.validation";
-import { authMiddleware } from "@/common/middleware/auth";
+import { exportController } from "./exports.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { exportTransactionsQuerySchema, exportReportQuerySchema } from "./exports.validation.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 
 const router: Router = Router();
 

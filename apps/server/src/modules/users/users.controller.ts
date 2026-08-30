@@ -1,8 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { userService } from "./users.service";
-import { sendSuccess, sendNoContent, sendMessage } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
-import { getAvatarUrl } from "@/common/utils/upload";
+import { userService } from "./users.service.js";
+import { sendSuccess, sendNoContent, sendMessage } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
+import { getAvatarUrl } from "../../common/utils/upload.js";
 
 /**
  * Strip sensitive/internal fields from the user object before sending to client.

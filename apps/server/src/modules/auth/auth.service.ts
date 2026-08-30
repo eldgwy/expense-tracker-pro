@@ -1,14 +1,14 @@
 import bcrypt from "bcrypt";
 import jwt, { type SignOptions } from "jsonwebtoken";
 import crypto from "node:crypto";
-import { authRepository } from "./auth.repository";
-import { categoryRepository } from "@/modules/categories/categories.repository";
-import { paymentMethodRepository } from "@/modules/payment-methods/payment-methods.repository";
-import { UnauthorizedError, ConflictError, ValidationError } from "@/common/errors";
-import { env } from "@/config/env";
-import { DEFAULT_CATEGORIES, DEFAULT_PAYMENT_METHODS } from "@/common/constants";
-import type { AuthResponse, AuthTokens } from "./auth.types";
-import type { JwtPayload } from "@/common/types";
+import { authRepository } from "./auth.repository.js";
+import { categoryRepository } from "../categories/categories.repository.js";
+import { paymentMethodRepository } from "../payment-methods/payment-methods.repository.js";
+import { UnauthorizedError, ConflictError, ValidationError } from "../../common/errors/index.js";
+import { env } from "../../config/env.js";
+import { DEFAULT_CATEGORIES, DEFAULT_PAYMENT_METHODS } from "../../common/constants/index.js";
+import type { AuthResponse, AuthTokens } from "./auth.types.js";
+import type { JwtPayload } from "../../common/types/index.js";
 
 // ─── Helpers ──────────────────────────────────────────────────
 

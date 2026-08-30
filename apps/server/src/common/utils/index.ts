@@ -1,4 +1,4 @@
-import type { DateRangePreset } from "@/common/types";
+import type { DateRangePreset } from "../types/index.js";
 
 /**
  * Pick specific keys from an object, returning a new partial object.

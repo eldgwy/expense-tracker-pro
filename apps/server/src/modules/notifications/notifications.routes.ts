@@ -1,15 +1,14 @@
 import { Router } from "express";
-import { notificationController } from "./notifications.controller";
-import { asyncHandler } from "@/common/middleware";
-import { uuidParamSchema } from "@/common/validators";
-import { validate } from "@/common/middleware";
-import { authMiddleware } from "@/common/middleware/auth";
+import { notificationController } from "./notifications.controller.js";
+import { asyncHandler, validate } from "../../common/middleware/index.js";
+import { uuidParamSchema } from "../../common/validators/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 import {
   updateNotificationPreferencesSchema,
   monthlySummaryQuerySchema,
   notificationQuerySchema,
   cleanupNotificationsSchema,
-} from "./notifications.validation";
+} from "./notifications.validation.js";
 
 const router: Router = Router();
 

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "prisma generate && tsc && tsc-alias",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
@@ -15,10 +15,10 @@
     "dev:migrate": "prisma migrate dev",
     "dev:seed": "prisma seed",
     "dev:seed:reset": "prisma seed --force",
-    "test:db": "tsx src/db/test.ts"
+    "test:db": "tsx prisma/test.ts"
   },
   "prisma": {
-    "seed": "tsx src/db/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "engines": {
     "node": "22.x"
@@ -59,7 +59,6 @@
     "eslint": "^10.6.0",
     "globals": "^17.7.0",
     "prisma": "^7.9.0",
-    "tsc-alias": "^1.9.1",
     "tsx": "^4.19.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0"

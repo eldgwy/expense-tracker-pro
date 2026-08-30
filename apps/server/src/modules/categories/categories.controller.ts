@@ -1,7 +1,7 @@
 import type { Response, NextFunction } from "express";
-import { categoryService } from "./categories.service";
-import { sendSuccess, sendCreated, sendNoContent } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
+import { categoryService } from "./categories.service.js";
+import { sendSuccess, sendCreated, sendNoContent } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
 
 export const categoryController = {
   async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {

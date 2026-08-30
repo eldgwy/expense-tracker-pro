@@ -1,5 +1,5 @@
-import { prisma } from "@/db/prisma";
-import type { PaymentMethodType } from "@/generated/prisma/client";
+import { prisma } from "../../db/prisma.js";
+import type { PaymentMethodType } from "../../generated/prisma/client.js";
 
 export interface PaymentMethodStats {
   totalTransactions: number;

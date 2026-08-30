@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { categoryController } from "./categories.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { createCategorySchema, updateCategorySchema } from "./categories.validation";
-import { uuidParamSchema } from "@/common/validators";
-import { authMiddleware } from "@/common/middleware/auth";
+import { categoryController } from "./categories.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { createCategorySchema, updateCategorySchema } from "./categories.validation.js";
+import { uuidParamSchema } from "../../common/validators/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 
 const router: Router = Router();
 

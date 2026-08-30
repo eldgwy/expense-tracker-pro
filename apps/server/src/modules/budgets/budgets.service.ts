@@ -3,11 +3,11 @@ import {
   computePeriodEnd,
   computeSpending,
   computeDaysRemaining,
-} from "./budgets.repository";
-import { categoryRepository } from "@/modules/categories/categories.repository";
-import { notificationRepository } from "@/modules/notifications/notifications.repository";
-import { NotFoundError, ConflictError, ValidationError } from "@/common/errors";
-import type { BudgetQueryFilters } from "./budgets.types";
+} from "./budgets.repository.js";
+import { categoryRepository } from "../categories/categories.repository.js";
+import { notificationRepository } from "../notifications/notifications.repository.js";
+import { NotFoundError, ConflictError, ValidationError } from "../../common/errors/index.js";
+import type { BudgetQueryFilters } from "./budgets.types.js";
 
 // ─── Constants ────────────────────────────────────────────────
 

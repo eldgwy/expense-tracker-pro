@@ -1,7 +1,7 @@
-import { notificationRepository } from "./notifications.repository";
-import { NotFoundError } from "@/common/errors";
-import { paginate } from "@/common/utils";
-import type { NotificationPreferences, NotificationPreferencesInput } from "./notifications.types";
+import { notificationRepository } from "./notifications.repository.js";
+import { NotFoundError } from "../../common/errors/index.js";
+import { paginate } from "../../common/utils/index.js";
+import type { NotificationPreferences, NotificationPreferencesInput } from "./notifications.types.js";
 
 export const notificationService = {
   /**

@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction, RequestHandler } from "express";
 import { ZodError, type ZodSchema } from "zod";
-import { AppError, ValidationError } from "@/common/errors";
-import { logger } from "@/config/logger";
+import { AppError, ValidationError } from "../errors/index.js";
+import { logger } from "../../config/logger.js";
 
 // ─── Global Error Handler ─────────────────────────────────────
 

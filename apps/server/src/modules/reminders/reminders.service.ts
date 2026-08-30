@@ -1,13 +1,13 @@
-import { reminderRepository } from "./reminders.repository";
-import { notificationRepository } from "../notifications/notifications.repository";
-import { NotFoundError, ValidationError } from "@/common/errors";
-import { prisma } from "@/db/prisma";
+import { reminderRepository } from "./reminders.repository.js";
+import { notificationRepository } from "../notifications/notifications.repository.js";
+import { NotFoundError, ValidationError } from "../../common/errors/index.js";
+import { prisma } from "../../db/prisma.js";
 import type {
   CreateReminderInput,
   UpdateReminderInput,
   ReminderQueryFilters,
-} from "./reminders.types";
-import type { ReminderFrequency } from "@/generated/prisma/client";
+} from "./reminders.types.js";
+import type { ReminderFrequency } from "../../generated/prisma/client.js";
 
 /** Convert a YYYY-MM-DD string to a UTC-midnight Date. */
 function parseDate(dateStr: string): Date {

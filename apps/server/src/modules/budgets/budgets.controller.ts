@@ -1,8 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { budgetService } from "./budgets.service";
-import { sendSuccess, sendCreated, sendNoContent } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
-import type { BudgetQueryFilters } from "./budgets.types";
+import { budgetService } from "./budgets.service.js";
+import { sendSuccess, sendCreated, sendNoContent } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
+import type { BudgetQueryFilters } from "./budgets.types.js";
 
 export const budgetController = {
   async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {

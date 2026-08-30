@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { reportController } from "./reports.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { authMiddleware } from "@/common/middleware/auth";
+import { reportController } from "./reports.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { authMiddleware } from "../../common/middleware/auth.js";
 import {
   categorySummaryQuerySchema,
   monthlyTrendQuerySchema,
@@ -12,7 +12,7 @@ import {
   customReportQuerySchema,
   reportSummaryQuerySchema,
   reportBreakdownQuerySchema,
-} from "./reports.validation";
+} from "./reports.validation.js";
 
 const router: Router = Router();
 

@@ -1,5 +1,5 @@
-import { prisma } from "@/db/prisma";
-import type { Prisma } from "@/generated/prisma/client";
+import { prisma } from "../../db/prisma.js";
+import type { Prisma } from "../../generated/prisma/client.js";
 
 export const transactionRepository = {
   async findAllByUser(

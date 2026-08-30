@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { nameSchema, hexColorSchema } from "@/common/validators";
-import { CATEGORY_ICONS, CATEGORY_COLORS } from "@/common/constants";
+import { nameSchema, hexColorSchema } from "../../common/validators/index.js";
+import { CATEGORY_ICONS, CATEGORY_COLORS } from "../../common/constants/index.js";
 
 const iconSchema = z.string().refine((val) => (CATEGORY_ICONS as readonly string[]).includes(val), {
   message: `Icon must be one of: ${CATEGORY_ICONS.join(", ")}`,

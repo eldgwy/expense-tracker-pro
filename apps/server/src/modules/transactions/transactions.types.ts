@@ -1,4 +1,4 @@
-import type { Transaction, Category, PaymentMethod } from "@/generated/prisma/client";
+import type { Transaction, Category, PaymentMethod } from "../../generated/prisma/client.js";
 
 export type TransactionWithRelations = Transaction & {
   category: Category;

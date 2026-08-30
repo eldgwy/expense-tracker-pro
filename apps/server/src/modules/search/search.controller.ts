@@ -1,6 +1,6 @@
 import type { Response, NextFunction } from "express";
-import { searchService } from "./search.service";
-import type { AuthenticatedRequest } from "@/common/types";
+import { searchService } from "./search.service.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
 
 export const searchController = {
   /**

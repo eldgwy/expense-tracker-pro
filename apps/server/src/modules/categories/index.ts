@@ -1,6 +1,6 @@
-export { categoryController } from "./categories.controller";
-export { categoryService } from "./categories.service";
-export { categoryRepository } from "./categories.repository";
-export { categoryRoutes } from "./categories.routes";
-export * from "./categories.types";
-export * from "./categories.validation";
+export { categoryController } from "./categories.controller.js";
+export { categoryService } from "./categories.service.js";
+export { categoryRepository } from "./categories.repository.js";
+export { categoryRoutes } from "./categories.routes.js";
+export * from "./categories.types.js";
+export * from "./categories.validation.js";

@@ -5,8 +5,8 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import type { RequestHandler, NextFunction } from "express";
-import { ValidationError } from "@/common/errors";
-import { logger } from "@/config/logger";
+import { ValidationError } from "../errors/index.js";
+import { logger } from "../../config/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

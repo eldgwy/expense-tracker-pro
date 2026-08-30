@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { jobsController } from "./jobs.controller";
-import { validate, asyncHandler } from "@/common/middleware";
-import { jobNameParamSchema, runJobQuerySchema } from "./jobs.validation";
+import { jobsController } from "./jobs.controller.js";
+import { validate, asyncHandler } from "../../common/middleware/index.js";
+import { jobNameParamSchema, runJobQuerySchema } from "./jobs.validation.js";
 
 const router: Router = Router();
 

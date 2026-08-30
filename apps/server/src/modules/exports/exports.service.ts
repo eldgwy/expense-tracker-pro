@@ -1,12 +1,12 @@
-import { reportRepository } from "../reports/reports.repository";
-import { reportService } from "../reports/reports.service";
-import { budgetRepository } from "../budgets/budgets.repository";
-import { savingsGoalRepository } from "../savings-goals/savings-goals.repository";
+import { reportRepository } from "../reports/reports.repository.js";
+import { reportService } from "../reports/reports.service.js";
+import { budgetRepository } from "../budgets/budgets.repository.js";
+import { savingsGoalRepository } from "../savings-goals/savings-goals.repository.js";
 import type {
   ExportTransactionsQuery,
   ExportTransactionsResult,
   ColumnName,
-} from "./exports.types";
+} from "./exports.types.js";
 
 // ─── CSV Escaping Helpers ──────────────────────────────────────
 

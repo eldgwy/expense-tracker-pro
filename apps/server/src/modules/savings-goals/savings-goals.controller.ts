@@ -1,8 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { savingsGoalService } from "./savings-goals.service";
-import { sendSuccess, sendCreated, sendNoContent } from "@/common/responses";
-import type { AuthenticatedRequest } from "@/common/types";
-import type { SavingsGoalQueryFilters } from "./savings-goals.types";
+import { savingsGoalService } from "./savings-goals.service.js";
+import { sendSuccess, sendCreated, sendNoContent } from "../../common/responses/index.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
+import type { SavingsGoalQueryFilters } from "./savings-goals.types.js";
 
 export const savingsGoalController = {
   async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {

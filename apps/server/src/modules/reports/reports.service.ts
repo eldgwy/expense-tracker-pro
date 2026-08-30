@@ -1,6 +1,6 @@
-import { reportRepository } from "./reports.repository";
-import { reportMapper } from "./reports.mapper";
-import { computePeriodEnd } from "../budgets/budgets.repository";
+import { reportRepository } from "./reports.repository.js";
+import { reportMapper } from "./reports.mapper.js";
+import { computePeriodEnd } from "../budgets/budgets.repository.js";
 
 export const reportService = {
   async getCategorySummary(userId: string, startDate: string, endDate: string) {

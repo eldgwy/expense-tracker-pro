@@ -1,5 +1,5 @@
 import type { CorsOptions } from "cors";
-import { env } from "./env";
+import { env } from "./env.js";
 
 const allowedOrigins = env.CORS_ORIGIN.split(",")
   .map((origin) => origin.trim())

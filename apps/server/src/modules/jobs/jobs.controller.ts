@@ -1,10 +1,9 @@
-import type { Response, NextFunction } from "express";
-import { jobsService } from "./jobs.service";
-import { sendSuccess } from "@/common/responses";
-import { UnauthorizedError } from "@/common/errors";
-import { env } from "@/config/env";
-import type { Request } from "express";
-import type { JobName } from "./jobs.types";
+import type { Response, NextFunction, Request } from "express";
+import { jobsService } from "./jobs.service.js";
+import { sendSuccess } from "../../common/responses/index.js";
+import { UnauthorizedError } from "../../common/errors/index.js";
+import { env } from "../../config/env.js";
+import type { JobName } from "./jobs.types.js";
 
 /**
  * Guard for the manual-run endpoints. A JOBS_TRIGGER_TOKEN must be configured

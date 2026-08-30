@@ -1,5 +1,5 @@
-import { prisma } from "@/db/prisma";
-import type { SearchEntity, SearchResultItem } from "./search.types";
+import { prisma } from "../../db/prisma.js";
+import type { SearchEntity, SearchResultItem } from "./search.types.js";
 
 /**
  * Search across all 5 entity types for a given user.

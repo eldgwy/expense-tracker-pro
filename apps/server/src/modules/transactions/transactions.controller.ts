@@ -1,9 +1,8 @@
 import type { Response, NextFunction } from "express";
-import { transactionService } from "./transactions.service";
-import { sendSuccess, sendCreated, sendNoContent, sendMessage } from "@/common/responses";
-import { buildPaginationMeta } from "@/common/responses";
-import { getReceiptUrl } from "@/common/utils/upload";
-import type { AuthenticatedRequest } from "@/common/types";
+import { transactionService } from "./transactions.service.js";
+import { sendSuccess, sendCreated, sendNoContent, sendMessage, buildPaginationMeta } from "../../common/responses/index.js";
+import { getReceiptUrl } from "../../common/utils/upload.js";
+import type { AuthenticatedRequest } from "../../common/types/index.js";
 
 export const transactionController = {
   async findAll(req: AuthenticatedRequest, res: Response, next: NextFunction) {
