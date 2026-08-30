@@ -73,8 +73,9 @@ const priorityVariant: Record<GoalPriority, "secondary" | "info" | "warning" | "
   CRITICAL: "error",
 };
 
-function formatCurrency(value: number): string {
-  return `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+function formatCurrency(value?: number | null): string {
+  const num = typeof value === "number" && !isNaN(value) ? value : 0;
+  return `$${num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatDate(iso: string | null): string {

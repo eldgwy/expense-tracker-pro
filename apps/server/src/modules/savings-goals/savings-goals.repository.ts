@@ -65,13 +65,28 @@ export const savingsGoalRepository = {
       }));
     }
 
-    // Compute status and apply filter/sort
-    let result = goals.map((goal) => ({
-      ...goal,
-      progress:
-        goal.targetAmount > 0 ? Math.round((goal.currentAmount / goal.targetAmount) * 100) : 0,
-      isCompleted: (goal.completedAt !== null && goal.completedAt !== undefined) || goal.currentAmount >= goal.targetAmount,
-    }));
+    // Compute status, progress, remaining, and daysRemaining
+    let result = goals.map((goal) => {
+      const target = goal.targetAmount ?? 0;
+      const current = goal.currentAmount ?? 0;
+      const progress = target > 0 ? Math.round((current / target) * 100) : 0;
+      const remaining = Math.max(0, target - current);
+      let daysRemaining: number | null = null;
+      if (goal.deadline) {
+        const now = new Date();
+        const timeDiff = new Date(goal.deadline).getTime() - now.getTime();
+        daysRemaining = timeDiff > 0 ? Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) : 0;
+      }
+      return {
+        ...goal,
+        progress,
+        remaining,
+        daysRemaining,
+        isCompleted:
+          (goal.completedAt !== null && goal.completedAt !== undefined) ||
+          current >= target,
+      };
+    });
 
     if (options.status) {
       result = result.filter((g) =>
