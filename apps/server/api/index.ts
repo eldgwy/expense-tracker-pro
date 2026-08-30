@@ -1,3 +1,6 @@
 import { createApp } from "../dist/app.js";
+import serverless from "serverless-http";
 
-export default createApp();
+const app = createApp();
+
+export default serverless(app);
