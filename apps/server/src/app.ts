@@ -4,13 +4,16 @@ import helmet, { type HelmetOptions } from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import compression from "compression";
-import { corsOptions, helmetOptions, logger, env } from "./config";
 import { apiLimiter } from "./config/rate-limit";
 import { errorHandler, notFoundHandler } from "./common/middleware";
 import { routes } from "./routes";
 import { API_PREFIX } from "./common/constants";
 import { prisma } from "./db";
 import { UPLOADS_DIR } from "./common/utils/upload";
+import { env } from "./config/env";
+import { helmetOptions } from "./config/helmet";
+import { corsOptions } from "./config/cors";
+import { logger } from "./config/logger";
 
 export function createApp(): Application {
   const app = express();
