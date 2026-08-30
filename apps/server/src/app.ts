@@ -58,7 +58,9 @@ export function createApp(): Application {
   // ─── Root & Fast Health Checks (Unthrottled, No DB dependency) ─
   const quickHealthHandler = (_req: express.Request, res: express.Response) => {
     res.status(200).json({
-      status: "ok",
+      success: true,
+      message: "API is healthy",
+      status: "healthy",
       timestamp: new Date().toISOString(),
       uptime: Math.floor(process.uptime()),
       environment: env.NODE_ENV,

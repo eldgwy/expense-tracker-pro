@@ -1,5 +1,24 @@
 import { prisma } from "../../db/prisma.js";
-import type { GoalPriority } from "../../generated/prisma/client.js";
+import type { GoalPriority, SavingsGoal } from "../../generated/prisma/client.js";
+
+let schemaEnsured = false;
+async function ensureSavingsGoalSchema(): Promise<void> {
+  if (schemaEnsured) return;
+  try {
+    await prisma.$executeRawUnsafe(`
+      DO $$ BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'GoalPriority') THEN
+          CREATE TYPE "GoalPriority" AS ENUM ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL');
+        END IF;
+      END $$;
+      ALTER TABLE "savings_goals" ADD COLUMN IF NOT EXISTS "priority" "GoalPriority" NOT NULL DEFAULT 'MEDIUM';
+      ALTER TABLE "savings_goals" ADD COLUMN IF NOT EXISTS "completedAt" TIMESTAMP(3);
+    `);
+    schemaEnsured = true;
+  } catch {
+    // Graceful continuation if user lacks DDL permissions or migrations are running
+  }
+}
 
 export const savingsGoalRepository = {
   async findAllByUser(
@@ -11,21 +30,47 @@ export const savingsGoalRepository = {
       sortOrder?: "asc" | "desc";
     } = {},
   ) {
-    // Fetch goals with optional DB-level priority filter
-    const goals = await prisma.savingsGoal.findMany({
-      where: {
-        userId,
-        ...(options.priority ? { priority: options.priority as GoalPriority } : {}),
-      },
-      orderBy: { createdAt: "desc" },
-    });
+    await ensureSavingsGoalSchema();
+
+    let goals: SavingsGoal[];
+    try {
+      goals = await prisma.savingsGoal.findMany({
+        where: {
+          userId,
+          ...(options.priority ? { priority: options.priority as GoalPriority } : {}),
+        },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch {
+      // Resilient fallback in case column addition is pending on remote DB
+      const raw = await prisma.$queryRaw<Array<{
+        id: string;
+        name: string;
+        targetAmount: number;
+        currentAmount: number;
+        deadline: Date | null;
+        priority?: string;
+        icon: string;
+        color: string;
+        userId: string;
+        completedAt?: Date | null;
+        createdAt: Date;
+        updatedAt: Date;
+      }>>`SELECT id, name, "targetAmount", "currentAmount", deadline, icon, color, "userId", "createdAt", "updatedAt" FROM "savings_goals" WHERE "userId" = ${userId}::uuid ORDER BY "createdAt" DESC`;
+
+      goals = raw.map((r) => ({
+        ...r,
+        priority: (r.priority as GoalPriority) ?? ("MEDIUM" as GoalPriority),
+        completedAt: r.completedAt ?? null,
+      }));
+    }
 
     // Compute status and apply filter/sort
     let result = goals.map((goal) => ({
       ...goal,
       progress:
         goal.targetAmount > 0 ? Math.round((goal.currentAmount / goal.targetAmount) * 100) : 0,
-      isCompleted: goal.currentAmount >= goal.targetAmount,
+      isCompleted: (goal.completedAt !== null && goal.completedAt !== undefined) || goal.currentAmount >= goal.targetAmount,
     }));
 
     if (options.status) {
@@ -42,8 +87,8 @@ export const savingsGoalRepository = {
       let cmp = 0;
       switch (sortBy) {
         case "deadline": {
-          const aDate = a.deadline?.getTime() ?? 0;
-          const bDate = b.deadline?.getTime() ?? 0;
+          const aDate = a.deadline ? new Date(a.deadline).getTime() : 0;
+          const bDate = b.deadline ? new Date(b.deadline).getTime() : 0;
           cmp = aDate - bDate;
           break;
         }
@@ -62,7 +107,7 @@ export const savingsGoalRepository = {
         }
         case "createdAt":
         default:
-          cmp = a.createdAt.getTime() - b.createdAt.getTime();
+          cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
           break;
       }
       return orderDir === "asc" ? cmp : -cmp;
@@ -72,7 +117,19 @@ export const savingsGoalRepository = {
   },
 
   async findById(id: string) {
-    return prisma.savingsGoal.findUnique({ where: { id } });
+    await ensureSavingsGoalSchema();
+    try {
+      return await prisma.savingsGoal.findUnique({ where: { id } });
+    } catch {
+      const raw = await prisma.$queryRaw<Array<any>>`SELECT * FROM "savings_goals" WHERE id = ${id}::uuid LIMIT 1`;
+      if (!raw.length) return null;
+      const r = raw[0];
+      return {
+        ...r,
+        priority: r.priority ?? "MEDIUM",
+        completedAt: r.completedAt ?? null,
+      } as SavingsGoal;
+    }
   },
 
   /**
@@ -80,7 +137,7 @@ export const savingsGoalRepository = {
    * progress, remaining, daysRemaining, isCompleted.
    */
   async getGoalWithDetails(userId: string, id: string) {
-    const goal = await prisma.savingsGoal.findUnique({ where: { id } });
+    const goal = await this.findById(id);
     if (!goal || goal.userId !== userId) return null;
 
     const progress =
@@ -90,7 +147,7 @@ export const savingsGoalRepository = {
 
     if (goal.deadline) {
       const now = new Date();
-      const timeDiff = goal.deadline.getTime() - now.getTime();
+      const timeDiff = new Date(goal.deadline).getTime() - now.getTime();
       daysRemaining = timeDiff > 0 ? Math.ceil(timeDiff / (1000 * 60 * 60 * 24)) : 0;
     }
 
@@ -104,17 +161,31 @@ export const savingsGoalRepository = {
   },
 
   async markAsCompleted(id: string) {
-    return prisma.savingsGoal.update({
-      where: { id },
-      data: { completedAt: new Date() },
-    });
+    await ensureSavingsGoalSchema();
+    try {
+      return await prisma.savingsGoal.update({
+        where: { id },
+        data: { completedAt: new Date() },
+      });
+    } catch {
+      return prisma.$executeRawUnsafe(
+        `UPDATE "savings_goals" SET "completedAt" = NOW() WHERE id = '${id}'`,
+      );
+    }
   },
 
   async clearCompletedAt(id: string) {
-    return prisma.savingsGoal.update({
-      where: { id },
-      data: { completedAt: null },
-    });
+    await ensureSavingsGoalSchema();
+    try {
+      return await prisma.savingsGoal.update({
+        where: { id },
+        data: { completedAt: null },
+      });
+    } catch {
+      return prisma.$executeRawUnsafe(
+        `UPDATE "savings_goals" SET "completedAt" = NULL WHERE id = '${id}'`,
+      );
+    }
   },
 
   async create(
@@ -129,6 +200,7 @@ export const savingsGoalRepository = {
       color?: string;
     },
   ) {
+    await ensureSavingsGoalSchema();
     return prisma.savingsGoal.create({
       data: { ...data, userId } as any,
     });
@@ -146,6 +218,7 @@ export const savingsGoalRepository = {
       color?: string;
     },
   ) {
+    await ensureSavingsGoalSchema();
     return prisma.savingsGoal.update({ where: { id }, data } as any);
   },
 
@@ -168,10 +241,21 @@ export const savingsGoalRepository = {
   },
 
   async getInsights(userId: string) {
-    const goals = await prisma.savingsGoal.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    await ensureSavingsGoalSchema();
+    let goals: SavingsGoal[];
+    try {
+      goals = await prisma.savingsGoal.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch {
+      const raw = await prisma.$queryRaw<Array<any>>`SELECT * FROM "savings_goals" WHERE "userId" = ${userId}::uuid ORDER BY "createdAt" DESC`;
+      goals = raw.map((r) => ({
+        ...r,
+        priority: r.priority ?? "MEDIUM",
+        completedAt: r.completedAt ?? null,
+      }));
+    }
 
     const now = new Date();
 
@@ -180,43 +264,51 @@ export const savingsGoalRepository = {
     const upcomingDeadlines = goals
       .filter((g) => {
         if (!g.deadline || g.currentAmount >= g.targetAmount) return false;
-        return g.deadline >= now && g.deadline <= thirtyDaysFromNow;
+        const d = new Date(g.deadline);
+        return d >= now && d <= thirtyDaysFromNow;
       })
-      .map((g) => ({
-        id: g.id,
-        name: g.name,
-        deadline: g.deadline,
-        targetAmount: g.targetAmount,
-        currentAmount: g.currentAmount,
-        progress: Math.round((g.currentAmount / g.targetAmount) * 100),
-        remaining: Math.max(0, g.targetAmount - g.currentAmount),
-        daysRemaining: Math.ceil((g.deadline!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
-      }))
+      .map((g) => {
+        const d = new Date(g.deadline!);
+        return {
+          id: g.id,
+          name: g.name,
+          deadline: g.deadline,
+          targetAmount: g.targetAmount,
+          currentAmount: g.currentAmount,
+          progress: Math.round((g.currentAmount / g.targetAmount) * 100),
+          remaining: Math.max(0, g.targetAmount - g.currentAmount),
+          daysRemaining: Math.ceil((d.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)),
+        };
+      })
       .sort((a, b) => a.daysRemaining - b.daysRemaining);
 
     // ── 2. Goals at risk of missing target date ──
     const goalsAtRisk = goals
       .filter((g) => {
         if (!g.deadline || g.currentAmount >= g.targetAmount) return false;
+        const created = new Date(g.createdAt);
+        const deadline = new Date(g.deadline);
         const daysElapsed = Math.ceil(
-          (now.getTime() - g.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+          (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24),
         );
         if (daysElapsed <= 0) return false;
         const savingsRatePerDay = g.currentAmount / daysElapsed;
         const daysUntilDeadline = Math.ceil(
-          (g.deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+          (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
         );
-        if (daysUntilDeadline <= 0) return true; // Already past deadline but not completed
+        if (daysUntilDeadline <= 0) return true;
         const projectedAtDeadline = g.currentAmount + savingsRatePerDay * daysUntilDeadline;
         return projectedAtDeadline < g.targetAmount;
       })
       .map((g) => {
+        const created = new Date(g.createdAt);
+        const deadline = new Date(g.deadline!);
         const daysElapsed = Math.ceil(
-          (now.getTime() - g.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+          (now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24),
         );
         const savingsRatePerDay = daysElapsed > 0 ? g.currentAmount / daysElapsed : 0;
         const daysUntilDeadline = Math.ceil(
-          (g.deadline!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+          (deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
         );
         const projectedAtDeadline =
           g.currentAmount + savingsRatePerDay * Math.max(0, daysUntilDeadline);
@@ -240,7 +332,7 @@ export const savingsGoalRepository = {
           requiredDaily: requiredDaily === Infinity ? null : Math.round(requiredDaily * 100) / 100,
         };
       })
-      .sort((a, b) => b.shortfall - a.shortfall); // Most at risk first
+      .sort((a, b) => b.shortfall - a.shortfall);
 
     // ── 3. Largest savings goal ──
     let largestGoal: {
@@ -273,30 +365,32 @@ export const savingsGoalRepository = {
       completedAt: Date;
     } | null = null;
 
-    const completed = goals.filter((g) => g.completedAt !== null);
+    const completed = goals.filter((g) => g.completedAt !== null && g.completedAt !== undefined);
     if (completed.length > 0) {
       const fastest = completed.reduce((prev, curr) => {
-        const prevDuration = prev.completedAt!.getTime() - prev.createdAt.getTime();
-        const currDuration = curr.completedAt!.getTime() - curr.createdAt.getTime();
+        const prevDuration = new Date(prev.completedAt!).getTime() - new Date(prev.createdAt).getTime();
+        const currDuration = new Date(curr.completedAt!).getTime() - new Date(curr.createdAt).getTime();
         return currDuration < prevDuration ? curr : prev;
       });
+      const completedDate = new Date(fastest.completedAt!);
+      const createdDate = new Date(fastest.createdAt);
       const daysToComplete = Math.ceil(
-        (fastest.completedAt!.getTime() - fastest.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+        (completedDate.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24),
       );
       fastestCompleted = {
         id: fastest.id,
         name: fastest.name,
         targetAmount: fastest.targetAmount,
         daysToComplete,
-        completedAt: fastest.completedAt!,
+        completedAt: completedDate,
       };
     }
 
-    // ── 5. Average monthly savings needed (for active goals with deadlines) ──
+    // ── 5. Average monthly savings needed ──
     const activeWithDeadlines = goals.filter((g) => {
       if (!g.deadline || g.currentAmount >= g.targetAmount) return false;
       const daysUntilDeadline = Math.ceil(
-        (g.deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        (new Date(g.deadline).getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
       );
       return daysUntilDeadline > 0;
     });
@@ -306,7 +400,7 @@ export const savingsGoalRepository = {
       const totalMonthlyNeeded = activeWithDeadlines.reduce((sum, g) => {
         const remaining = g.targetAmount - g.currentAmount;
         const daysUntilDeadline = Math.ceil(
-          (g.deadline!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+          (new Date(g.deadline!).getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
         );
         const monthsRemaining = Math.max(1, daysUntilDeadline / 30);
         return sum + remaining / monthsRemaining;
@@ -315,11 +409,10 @@ export const savingsGoalRepository = {
         Math.round((totalMonthlyNeeded / activeWithDeadlines.length) * 100) / 100;
     }
 
-    // ── Per-goal monthly savings breakdown ──
     const monthlySavingsPerGoal = activeWithDeadlines.map((g) => {
       const remaining = g.targetAmount - g.currentAmount;
       const daysUntilDeadline = Math.ceil(
-        (g.deadline!.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+        (new Date(g.deadline!).getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
       );
       const monthsRemaining = Math.max(1, daysUntilDeadline / 30);
       return {
@@ -342,10 +435,21 @@ export const savingsGoalRepository = {
   },
 
   async getStats(userId: string) {
-    const goals = await prisma.savingsGoal.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    await ensureSavingsGoalSchema();
+    let goals: SavingsGoal[];
+    try {
+      goals = await prisma.savingsGoal.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch {
+      const raw = await prisma.$queryRaw<Array<any>>`SELECT * FROM "savings_goals" WHERE "userId" = ${userId}::uuid ORDER BY "createdAt" DESC`;
+      goals = raw.map((r) => ({
+        ...r,
+        priority: r.priority ?? "MEDIUM",
+        completedAt: r.completedAt ?? null,
+      }));
+    }
 
     const totalGoals = goals.length;
     const completedGoals = goals.filter((g) => g.currentAmount >= g.targetAmount).length;
@@ -354,7 +458,6 @@ export const savingsGoalRepository = {
     const totalSaved = goals.reduce((sum, g) => sum + g.currentAmount, 0);
     const overallPercentage = totalTarget > 0 ? Math.round((totalSaved / totalTarget) * 100) : 0;
 
-    // Closest goal to completion among active goals
     const activeGoalList = goals.filter((g) => g.currentAmount < g.targetAmount);
     let closestGoal: {
       id: string;

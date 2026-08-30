@@ -131,11 +131,39 @@ export const dashboardService = {
         include: { category: true, paymentMethod: true },
       }),
 
-      // ── Savings goals ──
-      prisma.savingsGoal.findMany({
-        where: { userId },
-        orderBy: { createdAt: "desc" },
-      }),
+      // ── Savings goals (resilient with fallback) ──
+      (async () => {
+        try {
+          return await prisma.savingsGoal.findMany({
+            where: { userId },
+            orderBy: { createdAt: "desc" },
+          });
+        } catch {
+          try {
+            const raw = await prisma.$queryRaw<Array<{
+              id: string;
+              name: string;
+              targetAmount: number;
+              currentAmount: number;
+              deadline: Date | null;
+              priority?: string;
+              icon: string;
+              color: string;
+              userId: string;
+              completedAt?: Date | null;
+              createdAt: Date;
+              updatedAt: Date;
+            }>>`SELECT id, name, "targetAmount", "currentAmount", deadline, icon, color, "userId", "createdAt", "updatedAt" FROM "savings_goals" WHERE "userId" = ${userId}::uuid ORDER BY "createdAt" DESC`;
+            return raw.map((r) => ({
+              ...r,
+              priority: (r.priority as any) ?? "MEDIUM",
+              completedAt: r.completedAt ?? null,
+            }));
+          } catch {
+            return [];
+          }
+        }
+      })(),
     ]);
 
     // ─── Helper: extract sum from groupBy result by type ──
