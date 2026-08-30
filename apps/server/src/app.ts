@@ -19,11 +19,8 @@ export function createApp(): Application {
   const app = express();
 
   // ─── Trust Proxy ──────────────────────────────────────────
-  // Behind a single reverse proxy (nginx/caddy) trust the first hop so the
-  // rate limiters key on real client IPs instead of the proxy's shared IP.
-  // Never `true` — that would let anyone spoof X-Forwarded-For and bypass
-  // rate limiting (express-rate-limit v8 also refuses permissive trust).
-  // env.ts validates TRUST_PROXY and rejects the permissive "true" value.
+  // Behind reverse proxies (e.g. Vercel Edge / Nginx / Caddy), trust the
+  // first hop so rate limiters key on real client IPs.
   const trustProxyValue = env.TRUST_PROXY ?? (env.NODE_ENV === "production" ? "1" : "false");
   app.set(
     "trust proxy",
@@ -58,36 +55,49 @@ export function createApp(): Application {
     app.use(morgan("combined", { stream: logger.stream }));
   }
 
-  // ─── Rate Limiting ────────────────────────────────────────
-  app.use(API_PREFIX, apiLimiter);
-
-  // ─── Health Check ─────────────────────────────────────────
-  app.get(`${API_PREFIX}/health`, async (_req, res) => {
-    let dbStatus = "disconnected";
-    try {
-      await prisma.$queryRaw`SELECT 1`;
-      dbStatus = "connected";
-    } catch {
-      dbStatus = "error";
-    }
-
-    res.json({
-      success: true,
-      data: {
-        status: "healthy",
-        timestamp: new Date().toISOString(),
-        uptime: Math.floor(process.uptime()),
-        environment: env.NODE_ENV,
-        application: {
-          name: env.APP_NAME,
-          version: env.APP_VERSION,
-        },
-        database: {
-          status: dbStatus,
-        },
+  // ─── Root & Fast Health Checks (Unthrottled, No DB dependency) ─
+  const quickHealthHandler = (_req: express.Request, res: express.Response) => {
+    res.status(200).json({
+      status: "ok",
+      timestamp: new Date().toISOString(),
+      uptime: Math.floor(process.uptime()),
+      environment: env.NODE_ENV,
+      application: {
+        name: env.APP_NAME,
+        version: env.APP_VERSION,
       },
     });
-  });
+  };
+
+  app.get("/", quickHealthHandler);
+  app.get("/health", quickHealthHandler);
+  app.get(`${API_PREFIX}/health`, quickHealthHandler);
+
+  // ─── Database Health Check (Isolates DB connection from app boot) ─
+  const dbHealthHandler = async (_req: express.Request, res: express.Response) => {
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      res.status(200).json({
+        status: "ok",
+        database: "connected",
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      res.status(503).json({
+        status: "error",
+        database: "disconnected",
+        error: message,
+        timestamp: new Date().toISOString(),
+      });
+    }
+  };
+
+  app.get("/health/db", dbHealthHandler);
+  app.get(`${API_PREFIX}/health/db`, dbHealthHandler);
+
+  // ─── Rate Limiting (Applied to standard API routes) ───────
+  app.use(API_PREFIX, apiLimiter);
 
   // ─── API Routes ───────────────────────────────────────────
   app.use(API_PREFIX, routes);
