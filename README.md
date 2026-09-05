@@ -2,7 +2,7 @@
 
 > Production-grade, full-stack monorepo application for personal and small business financial management.
 >
-> 🚀 **Live Demo**: [https://expense-tracker-pro-ten-sandy.vercel.app/](https://expense-tracker-pro-ten-sandy.vercel.app/)
+> 🚀 **Live Demo**: [https://expense-tracker-pro-mocha.vercel.app/](https://expense-tracker-pro-mocha.vercel.app)
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-expense--tracker--pro-000000?style=flat-square&logo=vercel&logoColor=white)](https://expense-tracker-pro-ten-sandy.vercel.app/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
@@ -81,12 +81,12 @@ This repository serves as a showcase of modern software engineering principles. 
 
 | View | Screenshot |
 | --- | --- |
-| **Dashboard** | ![Dashboard Mockup](https://via.placeholder.com/800x450.png?text=Dashboard+Overview+UI) |
-| **Transactions Ledger** | ![Transactions Mockup](https://via.placeholder.com/800x450.png?text=Transactions+Ledger+UI) |
-| **Budget Management** | ![Budgets Mockup](https://via.placeholder.com/800x450.png?text=Budgets+Management+UI) |
-| **Reports & Analytics** | ![Reports Mockup](https://via.placeholder.com/800x450.png?text=Reports+Analytics+Charts+UI) |
-| **Savings Goals** | ![Savings Goals Mockup](https://via.placeholder.com/800x450.png?text=Savings+Goals+UI) |
-| **User Settings** | ![Settings Mockup](https://via.placeholder.com/800x450.png?text=Profile+Settings+UI) |
+| **Dashboard** | ![Dashboard Mockup](./screenshots/dashboard.png) |
+| **Transactions Ledger** | ![Transactions Mockup](./screenshots/transactions.png) |
+| **Budget Management** | ![Budgets Mockup](./screenshots/budgets.png) |
+| **Reports & Analytics** | ![Reports Mockup](./screenshots/reports.png) |
+| **Savings Goals** | ![Savings Goals Mockup](./screenshots/saving-goals.png) |
+| **User Settings** | ![Settings Mockup](./screenshots/settings.png) |
 
 ---
 
